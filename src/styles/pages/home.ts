@@ -18,7 +18,6 @@ export const Product = styled('a', {
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    minWidth: 540
 
     img: {
         objectFit: "cover"
