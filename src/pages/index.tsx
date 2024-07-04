@@ -1,16 +1,13 @@
 import { HomeContainer, Product } from "../styles/pages/home";
 import { useKeenSlider } from "keen-slider/react";
-
-import Camsieta1 from "../assets/camisetas/1.png";
-import Camsieta2 from "../assets/camisetas/2.png";
-import Camsieta3 from "../assets/camisetas/3.png";
 import Image from "next/image";
+
 
 import "keen-slider/keen-slider.min.css";
 import { stripe } from "../lib/stripe";
-import { log } from "console";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import Stripe from "stripe";
+import Link from "next/link";
 
 type Product = {
   id: string,
@@ -35,13 +32,22 @@ export default function Home({ products }: HomeProps) {
   function renderProducts(productList: Product[]) {
 
     return productList.map(prod => (
-      <Product className="keen-slider__slide" key={prod.id}>
-        <Image src={prod.imageURL} width={520} height={480} alt=""></Image>
-        <footer>
-          <strong>{prod.name}</strong>
-          <span>R$ {prod.price}</span>
-        </footer>
-      </Product >
+      <Link href={`/product/${prod.id}`} key={prod.id}>
+        <Product
+          className="keen-slider__slide"
+        >
+          <Image
+            src={prod.imageURL}
+            width={520}
+            height={480}
+            alt=""
+          />
+          <footer>
+            <strong>{prod.name}</strong>
+            <span>{prod.price}</span>
+          </footer>
+        </Product >
+      </Link>
     ))
 
   }
@@ -55,8 +61,7 @@ export default function Home({ products }: HomeProps) {
   );
 }
 
-
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 
   const response = await stripe.products.list({
     expand: ["data.default_price"]
@@ -69,14 +74,17 @@ export const getServerSideProps: GetServerSideProps = async () => {
       id: prod.id,
       name: prod.name,
       imageURL: prod.images.length > 0 ? prod.images[0] : "",
-      price: price.unit_amount! / 100
+      price: new Intl.NumberFormat('pt-BR', {
+        style: "currency",
+        currency: "BRL"
+      }).format(price.unit_amount! / 100)
     }
   })
-  console.log(products);
 
   return {
     props: {
       products
-    }
+    },
+    revalidate: 60 * 60 * 2
   }
 }
