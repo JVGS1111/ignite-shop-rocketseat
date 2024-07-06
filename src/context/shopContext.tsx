@@ -2,6 +2,7 @@
 
 import { ReactNode, createContext, useState } from "react";
 import { numberToCurrency } from "../utils/intl";
+import axios from "axios";
 
 
 interface ShopContextProps {
@@ -10,8 +11,10 @@ interface ShopContextProps {
     getCartLenght: () => number;
     removeProduct: (id: string) => void;
     getAmount: () => string;
+    handleBuyItens: () => void;
     products: Product[];
     isCartOpen: boolean;
+    isCreationCheckoutSession: boolean;
 }
 
 interface ShopContextProviderProps {
@@ -33,6 +36,7 @@ export const ShopContext = createContext<ShopContextProps>({} as ShopContextProp
 export function ShopContextProvider({ children }: ShopContextProviderProps) {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [products, setProducts] = useState<Product[]>([]);
+    const [isCreationCheckoutSession, setIsCreationCheckoutSession] = useState(false);
 
     function handleOpenCart(value?: boolean) {
         console.log("handleOpenCart");
@@ -92,16 +96,45 @@ export function ShopContextProvider({ children }: ShopContextProviderProps) {
         return numberToCurrency(amount);
     }
 
+    async function handleBuyItens() {
+        if (products.length == 0) {
+            return
+        }
+
+        try {
+            setIsCreationCheckoutSession(true);
+            const array = _createStripeCheckoutArray();
+            const { data } = await axios.post("/api/checkout", {
+                products: array
+            });
+            const { checkoutUrl } = data;
+            window.location.href = checkoutUrl;
+        } catch (error) {
+            setIsCreationCheckoutSession(false);
+            alert("Falha ao redirecionar ao checkout!");
+        }
+    }
+
+    function _createStripeCheckoutArray() {
+        const array = products.map(item => {
+            return {
+                priceId: item.defaultPriceId
+            }
+        });
+        return array;
+    }
+
     return (
         <ShopContext.Provider value={{
             isCartOpen,
             products,
+            isCreationCheckoutSession,
             handleOpenCart,
             getCartLenght,
             addProduct,
             removeProduct,
-            getAmount
-
+            getAmount,
+            handleBuyItens
         }}>
             {children}
         </ShopContext.Provider>

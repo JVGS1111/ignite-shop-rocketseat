@@ -14,8 +14,7 @@ export interface ProductProps {
 }
 
 export default function Products({ product }: ProductProps) {
-    const [isCreationCheckoutSession, setIsCreationCheckoutSession] = useState(false);
-    const { addProduct } = useShop();
+    const { addProduct, isCreationCheckoutSession } = useShop();
 
     // async function handleBuyProduct() {
     //     try {

@@ -2,7 +2,7 @@ import { useShop } from "@/src/hooks/useShop";
 import { CartResumeComponent } from "@/src/styles/components/cartResume";
 
 export function CartResume() {
-    const { getCartLenght, getAmount } = useShop();
+    const { getCartLenght, getAmount, handleBuyItens } = useShop();
     return (
         <CartResumeComponent>
             <div className="container">
@@ -13,7 +13,7 @@ export function CartResume() {
                 <span className="value_label">Valor total</span>
                 <span className="value">{getAmount()}</span>
             </div>
-            <button>
+            <button onClick={handleBuyItens}>
                 Finalizar compra
             </button>
         </CartResumeComponent>
