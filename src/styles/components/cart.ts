@@ -1,6 +1,5 @@
 import { styled } from "..";
 
-
 export const CartContainer = styled("div", {
     position: "fixed",
     width: "100%",
@@ -15,23 +14,18 @@ export const CartContainer = styled("div", {
     display: "flex",
     flexDirection: "column",
 
-    header: {
-        display: "flex",
-        justifyContent: "flex-end",
-        marginBottom: "24px",
-        ".close_btn": {
-            background: "transparent",
-            border: "none",
-            height: 44,
-            width: 44,
-            cursor: "pointer"
-        }
-    },
+    variants: {
+        isOpen: {
+            true: {
+                transition: ".2s",
+                transform: "translateX(0%)"
+            },
 
-    h1: {
-        color: "$white",
-        fontSize: "1.25rem",
-        fontWeight: "bold",
-        marginBottom: "32px"
+            false: {
+                transition: ".2s",
+                transform: "translateX(100%)"
+            }
+        },
     }
+
 })
