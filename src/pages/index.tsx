@@ -13,7 +13,8 @@ type Product = {
   id: string,
   name: string,
   imageURL: string,
-  price: string
+  priceFormatted: string,
+  price: number
 }
 
 interface HomeProps {
@@ -44,7 +45,7 @@ export default function Home({ products }: HomeProps) {
           />
           <footer>
             <strong>{prod.name}</strong>
-            <span>{prod.price}</span>
+            <span>{prod.priceFormatted}</span>
           </footer>
         </Product >
       </Link>
@@ -79,10 +80,11 @@ export const getStaticProps: GetStaticProps = async () => {
       id: prod.id,
       name: prod.name,
       imageURL: prod.images.length > 0 ? prod.images[0] : "",
-      price: new Intl.NumberFormat('pt-BR', {
+      priceFormatted: new Intl.NumberFormat('pt-BR', {
         style: "currency",
         currency: "BRL"
-      }).format(price.unit_amount! / 100)
+      }).format(price.unit_amount! / 100),
+      price: price.unit_amount! / 100
     }
   })
 

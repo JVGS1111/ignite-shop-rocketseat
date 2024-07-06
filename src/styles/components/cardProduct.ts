@@ -10,7 +10,15 @@ export const ProductCartComponent = styled("article", {
         width: 101,
         height: 93,
         background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
-        borderRadius: 8
+        borderRadius: 8,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        img: {
+            width: 93,
+            objectFit: "cover",
+        }
     },
 
     ".product__info_container": {

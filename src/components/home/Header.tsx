@@ -5,12 +5,13 @@ import bagSvg from "../../assets/bag.svg";
 import { useShop } from "@/src/hooks/useShop";
 
 export function HeaderComponent() {
-  const { handleOpenCart } = useShop();
+  const { handleOpenCart, getCartLenght } = useShop();
+
 
   return (
     <Header >
       <Image src={logoImg} alt="ignite shop" />
-      <button data-count={3} onClick={() => {
+      <button data-count={getCartLenght()} onClick={() => {
         handleOpenCart(true)
       }}>
         <Image src={bagSvg} alt="carrinho" />
