@@ -7,6 +7,7 @@ import { stripe } from "../lib/stripe";
 import { GetStaticProps } from "next";
 import Stripe from "stripe";
 import Link from "next/link";
+import Head from "next/head";
 
 type Product = {
   id: string,
@@ -31,7 +32,7 @@ export default function Home({ products }: HomeProps) {
   function renderProducts(productList: Product[]) {
 
     return productList.map(prod => (
-      <Link href={`/product/${prod.id}`} key={prod.id} prefetch>
+      <Link href={`/product/${prod.id}`} key={prod.id} >
         <Product
           className="keen-slider__slide"
         >
@@ -51,11 +52,17 @@ export default function Home({ products }: HomeProps) {
   }
 
   return (
-    <HomeContainer ref={sliderRef} className="keen-slider">
-      {
-        renderProducts(products)
-      }
-    </HomeContainer>
+    <>
+      <Head>
+        <title>Home | Ignite Shop</title>
+      </Head>
+      <HomeContainer ref={sliderRef} className="keen-slider">
+        {
+          renderProducts(products)
+        }
+      </HomeContainer>
+    </>
+
   );
 }
 
